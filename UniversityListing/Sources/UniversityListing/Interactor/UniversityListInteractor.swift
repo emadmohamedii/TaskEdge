@@ -5,6 +5,7 @@
 
 import UIKit
 import NetworkKit
+import PersistenceKit
 
 final class UniversityListInteractor {
     
@@ -12,6 +13,7 @@ final class UniversityListInteractor {
     
     private let universityLoader: UniversityListingLoaderProtocol
     private var isFetching: Bool = false
+    private let realmHelper = RealmHelper()
     
     // MARK: Init
     init(loader: UniversityListingLoaderProtocol) {
@@ -73,13 +75,33 @@ extension UniversityListInteractor {
     private func handleSuccessfulFetch(_ universityResponse: [UniversityResponse]) {
         let universityEntities = universityResponse.compactMap { mapToEntity($0) }
         presenter?.didFetchUniversitys(universityEntities)
+        // if API returned with data clear old one in db and save a new array
+        cleanDBForNewUniversityData()
+        saveUniversityDataInLocalDB(universityResponse)
     }
     
     private func handleFailedFetch(_ error: Error) {
-        presenter?.didFailToFetchUniversitys(with: error)
+        let universityEntities = realmHelper.getAllUniversities().compactMap  { mapToEntity($0) }
+        if universityEntities.isEmpty {
+            presenter?.didFailToFetchUniversitys(with: error)
+        }
+        else {
+            print("Data Fetched from DB")
+            presenter?.didFetchUniversitys(universityEntities)
+            stopLoadingIndicators()
+        }
     }
     
     private func stopLoadingIndicators() {
-        self.showLoadingIndicator(false)
+        showLoadingIndicator(false)
+    }
+    
+    private func saveUniversityDataInLocalDB(_ universityResponse: [UniversityResponse]){
+        let storedData = universityResponse.map({University(from: $0)})
+        realmHelper.addUniversities(storedData)
+    }
+    
+    private func cleanDBForNewUniversityData(){
+        realmHelper.deleteAllUniversities()
     }
 }

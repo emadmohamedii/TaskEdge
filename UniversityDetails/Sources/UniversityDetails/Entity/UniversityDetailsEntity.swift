@@ -12,13 +12,13 @@ final public class UniversityDetailsEntity {
     let stateProvince : String
     let countryCode: String
     let country: String
-    let webPage: [String]
+    let webPages: [String]
     
-    public init(name: String, stateProvince: String, countryCode: String, country: String, webPage: [String]) {
+    public init(name: String, stateProvince: String, countryCode: String, country: String, webPages: [String]) {
         self.name = name
         self.stateProvince = stateProvince
         self.countryCode = countryCode
         self.country = country
-        self.webPage = webPage
+        self.webPages = webPages
     }
 }

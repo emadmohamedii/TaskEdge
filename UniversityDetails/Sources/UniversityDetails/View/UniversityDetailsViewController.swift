@@ -36,7 +36,7 @@ extension UniversityDetailsViewController : UniversityDetailsControllerProtocol 
             universityStateLbl.text = university.stateProvince
             universityCountryLbl.text = univeristy?.country
             universityCountryCodeLbl.text = univeristy?.countryCode
-            universityWebPageLbl.text = univeristy?.webPage.map({$0}).joined(separator: ",")
+            universityWebPageLbl.text = univeristy?.webPages.map({$0}).joined(separator: ",")
         }
         else {
             print("Show Error")

@@ -16,7 +16,8 @@ public final class UniversityListViewController: UIViewController {
     
     // MARK: Properties
     var presenter: UniversityListPresenterProtocol?
-    
+    private let networkHelper = NetworkHelper.shared
+
     // MARK: Init
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -97,7 +98,9 @@ extension UniversityListViewController: UITableViewDataSource, UITableViewDelega
 }
 
 extension UniversityListViewController {
-    public func refreshListingData(){
-        self.presenter?.viewDidLoad()
+    public func refreshListingData() {
+        if self.networkHelper.isConnected {
+            self.presenter?.viewDidLoad()
+        }
     }
 }

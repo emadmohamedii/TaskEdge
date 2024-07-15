@@ -13,13 +13,16 @@ let package = Package(
             targets: ["UniversityListing"]),
     ],
     dependencies: [
-        .package(name: "NetworkKit", path: "../NetworkKit"),
-        .package(name: "UIComponents", path: "../UIComponents")
+        .package(path: "../NetworkKit"),
+        .package(path: "../UIComponents")
     ],
     targets: [
         .target(
             name: "UniversityListing",
-            dependencies: ["NetworkKit",
-                           "UIComponents"]), 
+            dependencies: [
+                .product(name: "NetworkKit", package: "NetworkKit"),
+                .product(name: "PersistenceKit", package: "NetworkKit"),
+                .product(name: "UIComponents", package: "UIComponents")
+            ]),
     ]
 )

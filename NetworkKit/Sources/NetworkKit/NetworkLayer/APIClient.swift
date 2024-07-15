@@ -50,6 +50,8 @@ extension APIClient {
                                  headers: configuration.header,
                                  parameters: requestParameters),
                      completion: completion)
+        
+        print(url)
     }
     
     private func buildURL(with configuration: APIRequestConfigurationProtocol) -> String {
@@ -89,9 +91,7 @@ extension APIClient {
                    interceptor: requestInterceptor)
         .validate(statusCode: 200..<300)
         .responseDecodable(of: Entity.self) { response in
-#if deubg
-            print(response)
-#endif
+            print("Data Fetched from API")
             DispatchQueue.main.async {
                 switch response.result {
                 case .success(let data):
