@@ -9,37 +9,36 @@ import PersistenceKit
 
 final class UniversityListInteractor {
     
+    // MARK: - Properties
+
     var presenter: UniversityListInteractorOutput?
     
     private let universityLoader: UniversityListingLoaderProtocol
-    private var isFetching: Bool = false
+    private var isFetching = false
     private let realmHelper = RealmHelper()
+    private let uae = "United Arab Emirates"
     
-    // MARK: Init
+    // MARK: - Init
     init(loader: UniversityListingLoaderProtocol) {
         self.universityLoader = loader
     }
 }
 
+// MARK: - UniversityListPresenterInteractorProtocol
+
 extension UniversityListInteractor: UniversityListPresenterInteractorProtocol {
     
-    // MARK: - Get University List
+    // MARK: - Fetch University List
     func fetchUniversityList() {
         guard shouldFetchUniversityList else { return }
         
         isFetching = true
         showLoadingIndicator(true)
-        universityLoader.loadUniveristy(with: .init(country: "United Arab Emirates")) { [weak self] result in
+        universityLoader.loadUniversity(with: .init(country: uae)) { [weak self] result in
             guard let self = self else { return }
-            defer {
-                self.isFetching = false
-                DispatchQueue.main.async {
-                    self.stopLoadingIndicators()
-                }
-            }
-            DispatchQueue.main.async {
-                self.handleFetchedResult(result)
-            }
+            self.handleFetchedResult(result)
+            self.isFetching = false
+            self.stopLoadingIndicators()
         }
     }
     
@@ -53,7 +52,7 @@ extension UniversityListInteractor: UniversityListPresenterInteractorProtocol {
 }
 
 
-// MARK: - Handle Fetch University Result
+// MARK: - Private Methods
 extension UniversityListInteractor {
     private var shouldFetchUniversityList: Bool {
         !isFetching
@@ -74,20 +73,20 @@ extension UniversityListInteractor {
     
     private func handleSuccessfulFetch(_ universityResponse: [UniversityResponse]) {
         let universityEntities = universityResponse.compactMap { mapToEntity($0) }
-        presenter?.didFetchUniversitys(universityEntities)
-        // if API returned with data clear old one in db and save a new array
+        presenter?.didFetchUniversities(universityEntities)
+        // If API returned with data, clear old data in the database and save the new array
         cleanDBForNewUniversityData()
         saveUniversityDataInLocalDB(universityResponse)
     }
     
     private func handleFailedFetch(_ error: Error) {
-        let universityEntities = realmHelper.getAllUniversities().compactMap  { mapToEntity($0) }
+        let universityEntities = realmHelper.getAllUniversities().compactMap { mapToEntity($0) }
         if universityEntities.isEmpty {
-            presenter?.didFailToFetchUniversitys(with: error)
+            presenter?.didFailToFetchUniversities(with: error)
         }
         else {
-            print("Data Fetched from DB")
-            presenter?.didFetchUniversitys(universityEntities)
+            debugPrint("Data Fetched from DB")
+            presenter?.didFetchUniversities(universityEntities)
             stopLoadingIndicators()
         }
     }
@@ -97,11 +96,10 @@ extension UniversityListInteractor {
     }
     
     private func saveUniversityDataInLocalDB(_ universityResponse: [UniversityResponse]){
-        let storedData = universityResponse.map({University(from: $0)})
-        realmHelper.addUniversities(storedData)
+        realmHelper.addUniversities(universityResponse)
     }
     
-    private func cleanDBForNewUniversityData(){
+    private func cleanDBForNewUniversityData() {
         realmHelper.deleteAllUniversities()
     }
 }

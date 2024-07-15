@@ -7,13 +7,14 @@
 
 import UIKit
 import NetworkKit
+import Common
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        let networkConfig = NetworkLayerConfig(baseUrl: Constants.baseUrl , token: nil)
+        let networkConfig = NetworkLayerConfig(baseUrl: Constants.baseUrl, token: nil)
         APIClient.shared.configClient(networkConfig)
         
         return true

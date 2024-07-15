@@ -6,40 +6,48 @@
 //
 
 import UIKit
+import UIComponents
 
 public final class UniversityDetailsViewController: UIViewController {
     
-    @IBOutlet weak var universityNameLbl:UILabel!
-    @IBOutlet weak var universityStateLbl:UILabel!
-    @IBOutlet weak var universityCountryLbl:UILabel!
-    @IBOutlet weak var universityCountryCodeLbl:UILabel!
-    @IBOutlet weak var universityWebPageLbl:UILabel!
-    
+    // MARK: - Outlets
+    @IBOutlet private weak var universityNameLbl: UILabel!
+    @IBOutlet private weak var universityStateLbl: UILabel!
+    @IBOutlet private weak var universityCountryLbl: UILabel!
+    @IBOutlet private weak var universityCountryCodeLbl: UILabel!
+    @IBOutlet private weak var universityWebPageTV: UITextView!
+
     // MARK: Properties
     var presenter: UniversityDetailsPresentable?
     
+    // MARK: - Lifecycle
     public override func viewDidLoad() {
         super.viewDidLoad()
-        presenter?.viewDidLoad()
+        title = "Details"
+        presenter?.fetchUniversityData()
     }
     
+    // MARK: - Actions
     @IBAction func didTapRefresh(){
-        
         presenter?.reloadListing()
     }
 }
 
+// MARK: - Conform to UniversityDetailsControllerProtocol
 extension UniversityDetailsViewController : UniversityDetailsControllerProtocol {
-    func showUniversityDetails(univeristy: UniversityDetailsEntity?) {
-        if let university = univeristy {
+    
+    // Method to display university details in the UI
+    func showUniversityDetails(university: UniversityDetailsEntity?) {
+        if let university = university {
             universityNameLbl.text = university.name
             universityStateLbl.text = university.stateProvince
-            universityCountryLbl.text = univeristy?.country
-            universityCountryCodeLbl.text = univeristy?.countryCode
-            universityWebPageLbl.text = univeristy?.webPages.map({$0}).joined(separator: ",")
+            universityCountryLbl.text = university.country
+            universityCountryCodeLbl.text = university.countryCode
+            universityWebPageTV.text = university.webPages.joined(separator: ", ")
         }
         else {
-            print("Show Error")
+            // Show an alert if university details are not available
+            self.showAlert(message: "Unknown Error")
         }
     }
 }

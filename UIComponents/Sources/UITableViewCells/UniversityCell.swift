@@ -9,8 +9,8 @@ import UIKit
 
 public final class UniversityCell: UITableViewCell {
 
-    @IBOutlet private weak var nameLbl:UILabel!
-    @IBOutlet private weak var stateLbl:UILabel!
+    @IBOutlet private weak var nameLbl: UILabel!
+    @IBOutlet private weak var stateLbl: UILabel!
     
     
     public override func awakeFromNib() {

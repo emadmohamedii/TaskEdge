@@ -9,8 +9,7 @@ import Foundation
 import Alamofire
 
 public protocol NetworkLayerConfigProtocol {
-    init(baseUrl: String,
-         token: String?)
+    init(baseUrl: String, token: String?)
     func getToken() -> String
     func updateToken(_ token: String)
     func getBaseUrl() -> String
@@ -20,6 +19,7 @@ final public class NetworkLayerConfig: NetworkLayerConfigProtocol {
     // MARK: Properites
     private let baseUrl: String
     private var token: String?
+
     // MARK: initializer to enforce singleton pattern
     public init(baseUrl: String, token: String?) {
         self.baseUrl = baseUrl

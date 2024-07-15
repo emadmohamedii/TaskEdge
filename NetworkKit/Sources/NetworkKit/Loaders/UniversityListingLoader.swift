@@ -10,7 +10,7 @@ import Foundation
 
 // Protocol for the UniversityListingLoaderProtocol
 public protocol UniversityListingLoaderProtocol {
-    func loadUniveristy(with parameters: UniversitySearchRequest,
+    func loadUniversity(with parameters: UniversitySearchRequest,
                         completionHandler: @escaping (APIResult<[UniversityResponse]>) -> Void)
 }
 
@@ -19,9 +19,10 @@ public final class UniversityListingLoader: UniversityListingLoaderProtocol, API
     public typealias Entity = [UniversityResponse]
     
     public init() { }
+    
     // MARK: Call API Request
-    public func loadUniveristy(with parameters: UniversitySearchRequest,
-                           completionHandler: @escaping (APIResult<Entity>) -> Void) {
+    public func loadUniversity(with parameters: UniversitySearchRequest,
+                               completionHandler: @escaping (APIResult<Entity>) -> Void) {
         let configuration = APIRequestConfiguration(router: UniversityListingAPIRouter.search,
                                                     method: .get(parameters: parameters))
         loadItems(requestConfiguration: configuration, completionHandler: completionHandler)

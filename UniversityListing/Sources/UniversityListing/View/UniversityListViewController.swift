@@ -8,6 +8,7 @@
 import UIKit
 import UIComponents
 
+
 public final class UniversityListViewController: UIViewController {
     // MARK: Outlets
     @IBOutlet private weak var tableView: UITableView!
@@ -16,8 +17,7 @@ public final class UniversityListViewController: UIViewController {
     
     // MARK: Properties
     var presenter: UniversityListPresenterProtocol?
-    private let networkHelper = NetworkHelper.shared
-
+        
     // MARK: Init
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -30,23 +30,21 @@ public final class UniversityListViewController: UIViewController {
     // MARK: Lifecycle
     public override func viewDidLoad() {
         super.viewDidLoad()
-        presenter?.viewDidLoad()
-        // config collectionView
+        title = "Home"
+        presenter?.fetchUniversityData()
         configTableView()
     }
-        
+    
     // MARK: Configurations
     private func configTableView() {
-        // config delgate and dataSoruce
         tableView.delegate = self
         tableView.dataSource = self
-        // register Cell
         tableView.registerNib(UniversityCell.self)
     }
 }
 
 
-// MARK: - Conform to UniversityListControllerProtocol - Presneter -> Controller Action
+// MARK: - Conform to UniversityListControllerProtocol
 extension UniversityListViewController: UniversityListControllerProtocol {
     
     func presentError(with message: String) {
@@ -80,9 +78,11 @@ extension UniversityListViewController: UniversityListControllerProtocol {
     }
 }
 
+// MARK: - UITableViewDataSource, UITableViewDelegate
+
 extension UniversityListViewController: UITableViewDataSource, UITableViewDelegate {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter?.universitysItemsCount ?? 0
+        return presenter?.universitiesItemsCount ?? 0
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -94,13 +94,5 @@ extension UniversityListViewController: UITableViewDataSource, UITableViewDelega
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         presenter?.navigateToUniversityDetails(with: indexPath.item)
-    }
-}
-
-extension UniversityListViewController {
-    public func refreshListingData() {
-        if self.networkHelper.isConnected {
-            self.presenter?.viewDidLoad()
-        }
     }
 }

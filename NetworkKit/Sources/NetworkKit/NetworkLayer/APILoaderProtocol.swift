@@ -24,12 +24,7 @@ public extension APILoaderProtocol {
     func loadItems(requestConfiguration configuration: APIRequestConfigurationProtocol,
                    completionHandler: @escaping ResultHandler<Entity>) {
         APIClient.shared.performRequest(with: configuration) { (result: APIResult<Entity>) in
-            switch result {
-            case .success(let data):
-                completionHandler(.success(data))
-            case .failure(let error):
-                completionHandler(.failure(error))
-            }
+            completionHandler(result)
         }
     }
 }

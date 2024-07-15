@@ -11,11 +11,13 @@ import NetworkKit
 final class UniversityDetailsPresenter: NSObject {
     
     // MARK: - Properites
+    
     private weak var view: UniversityDetailsControllerProtocol?
     private var university : UniversityDetailsEntity?
     private var router : UniversityDetailsRouterProtocol?
     
     // MARK: - Init
+    
     init(view: UniversityDetailsControllerProtocol?,
          university : UniversityDetailsEntity?,
          router: UniversityDetailsRouterProtocol?) {
@@ -25,12 +27,16 @@ final class UniversityDetailsPresenter: NSObject {
     }
 }
 
-// MARK: Conform to UniversityListPresenterProtocol
+// MARK: - Conform to UniversityDetailsPresentable
+
 extension UniversityDetailsPresenter: UniversityDetailsPresentable {
-    func viewDidLoad() {
-        view?.showUniversityDetails(univeristy: self.university)
+    
+    // Method to fetch university data and display in the view
+    func fetchUniversityData() {
+        view?.showUniversityDetails(university: self.university)
     }
     
+    // Method to reload listing, typically navigate back and refresh data
     func reloadListing() {
         // Navigate to home screen with action of reload listing
         router?.dismissAndReload()

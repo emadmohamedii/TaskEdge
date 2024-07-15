@@ -9,17 +9,15 @@ import Foundation
 import UIComponents
 
 final public class UniversityListEntity {
-    
+
     // MARK: - Properties
-    
     public let name: String
     public let stateProvince: String
     public let countryCode: String
     public let country: String
     public let webPages: [String]
-    
+
     // MARK: - Initialization
-    
     public init(name: String, stateProvince: String, countryCode: String, country: String, webPages: [String]) {
         self.name = name
         self.stateProvince = stateProvince
@@ -29,20 +27,22 @@ final public class UniversityListEntity {
     }
 }
 
-// MARK: Conform to UniversityCellItemProtocol to Display Cell Details
+// MARK: - Conformances
+
+// MARK: UniversityCellItemProtocol Conformance
 extension UniversityListEntity: UniversityCellItemProtocol {
     public var universityName: String {
-        return name
+        name
     }
-    
+
     public var universityState: String {
-        return stateProvince
+        stateProvince
     }
 }
 
-// MARK: Conform to UniversityDetailsBuilderInput to pass data to UniversityDetails
+// MARK: UniversityDetailsBuilderInput Conformance
 extension UniversityListEntity: UniversityDetailsBuilderInput {
     public var id: String {
-        return name + stateProvince
+        name + stateProvince
     }
 }

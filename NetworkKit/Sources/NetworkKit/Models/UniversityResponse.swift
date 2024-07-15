@@ -19,14 +19,19 @@ public struct UniversityResponse : Codable {
     
     enum CodingKeys: String, CodingKey {
         case alphaTwoCode = "alpha_two_code"
-        case country = "country"
-        case domains = "domains"
-        case name = "name"
+        case country
+        case domains
+        case name
         case stateProvince = "state-province"
         case webPages = "web_pages"
     }
     
-    public init(alphaTwoCode: String? = nil, country: String? = nil, domains: [String]? = nil, name: String? = nil, stateProvince: String? = nil, webPages: [String]? = nil) {
+    public init(alphaTwoCode: String? = nil,
+                country: String? = nil,
+                domains: [String]? = nil,
+                name: String? = nil,
+                stateProvince: String? = nil,
+                webPages: [String]? = nil) {
         self.alphaTwoCode = alphaTwoCode
         self.country = country
         self.domains = domains

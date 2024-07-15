@@ -91,7 +91,7 @@ extension APIClient {
                    interceptor: requestInterceptor)
         .validate(statusCode: 200..<300)
         .responseDecodable(of: Entity.self) { response in
-            print("Data Fetched from API")
+            debugPrint("Data Fetched from API")
             DispatchQueue.main.async {
                 switch response.result {
                 case .success(let data):

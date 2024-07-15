@@ -4,8 +4,10 @@
 //
 
 import UIKit
+import Common
 
 final class UniversityListPresenter: NSObject {
+    
     // MARK: - Properites
     private weak var view: UniversityListControllerProtocol?
     private var interactor: UniversityListPresenterInteractorProtocol?
@@ -13,6 +15,7 @@ final class UniversityListPresenter: NSObject {
     private var universities = [UniversityListEntity]()
     private let loadingDataText = "Loading data..."
     private let errorPlaceHolderText = "No Data to Present"
+    private let networkHelper = NetworkHelper.shared
     
     // MARK: - Init
     init(view: UniversityListControllerProtocol?,
@@ -24,30 +27,34 @@ final class UniversityListPresenter: NSObject {
     }
 }
 
-// MARK: Conform to UniversityListPresenterProtocol
+// MARK: - Conform to UniversityListPresenterProtocol
 extension UniversityListPresenter: UniversityListPresenterProtocol {
     
     func getItem(at index: Int) -> UniversityListEntity? {
         self.universities[safe: index]
     }
     
-    var universitysItemsCount: Int {
+    var universitiesItemsCount: Int {
         self.universities.count
     }
     
-    func viewDidLoad() {
-        self.universities = []
-        self.view?.reloadCollectionView()
-        
-        // Show PlaceHolder label during loading data
+    func fetchUniversityData() {
+        // Remove old loaded data and empty tableView
+        clearUniversitiesAndReloadData()
+        // Show placeholder label during loading data
         handleShowingEmptyListPlaceHolder(with: loadingDataText)
-        // Load Data
+        // Load data
         interactor?.fetchUniversityList()
+    }
+    
+    private func clearUniversitiesAndReloadData(){
+        self.universities.removeAll()
+        self.view?.reloadCollectionView()
     }
     
     func navigateToUniversityDetails(with index: Int) {
         guard let selectedUniversity = self.universities[safe: index] else { return }
-        self.router?.navigateToUniversityDetails(for: selectedUniversity)
+        self.router?.navigateToUniversityDetails(for: selectedUniversity, refreshDelegate: self)
     }
     
     func setLoadingIndicatorVisible(_ isVisible: Bool) {
@@ -66,19 +73,30 @@ extension UniversityListPresenter: UniversityListPresenterProtocol {
     }
 }
 
-// MARK: Conform to UniversityListInteractorOutput
+// MARK: - Conform to UniversityListInteractorOutput
+
 extension UniversityListPresenter: UniversityListInteractorOutput {
     
-    func didFetchUniversitys(_ universities: [UniversityListEntity]) {
-        defer {
-            self.view?.hideCollectionPlaceholderLabel()
-            self.view?.reloadCollectionView()
-        }
+    func didFetchUniversities(_ universities: [UniversityListEntity]) {
         self.universities = universities
+        self.view?.hideCollectionPlaceholderLabel()
+        self.view?.reloadCollectionView()
     }
     
-    func didFailToFetchUniversitys(with error: any Error) {
+    func didFailToFetchUniversities(with error: any Error) {
         self.view?.presentError(with: error.localizedDescription)
         self.handleShowingEmptyListPlaceHolder(with: errorPlaceHolderText)
+    }
+}
+
+// MARK: - DetailsModuleDelegate
+extension UniversityListPresenter: DetailsModuleDelegate {
+    
+    func refreshListingDataAction() {
+        print("refresh Listing Data Action")
+        guard self.networkHelper.isConnected else {
+            return
+        }
+        self.fetchUniversityData()
     }
 }

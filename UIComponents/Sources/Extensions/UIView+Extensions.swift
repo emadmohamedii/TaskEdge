@@ -76,20 +76,3 @@ extension UIView {
         heightConstraint.isActive = true
     }
 }
-// MARK: UI Related Extensions
-extension UIView {
-    func addGradientOverlay(colors: [UIColor], locations: [NSNumber]? = nil, startPoint: CGPoint = CGPoint(x: 0.5, y: 0), endPoint: CGPoint = CGPoint(x: 0.5, y: 1)) -> CAGradientLayer {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = colors.map { $0.cgColor }
-        gradientLayer.locations = locations
-        gradientLayer.startPoint = startPoint
-        gradientLayer.endPoint = endPoint
-        gradientLayer.frame = bounds  // Ensure the frame covers the entire view
-
-        // Remove existing gradient layers before adding a new one
-        layer.sublayers?.filter { $0 is CAGradientLayer }.forEach { $0.removeFromSuperlayer() }
-
-        layer.addSublayer(gradientLayer)
-        return gradientLayer
-    }
-}

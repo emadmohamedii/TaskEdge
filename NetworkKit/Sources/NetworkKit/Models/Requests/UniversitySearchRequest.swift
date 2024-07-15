@@ -16,6 +16,6 @@ public struct UniversitySearchRequest: Encodable {
     
     // CodingKeys for customization
     enum CodingKeys: String, CodingKey {
-        case country = "country"
+        case country
     }
 }

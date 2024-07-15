@@ -7,22 +7,29 @@
 
 import UIKit
 import NetworkKit
+import Common
 
+// Protocol to pass data to University Details module
 public protocol UniversityDetailsBuilderInput {
     var id: String { get }
 }
 
+// Example input struct conforming to UniversityDetailsBuilderInput
 struct UniversityDetailsInput: UniversityDetailsBuilderInput {
     let id: String
 }
 
+// Protocol for routing from University List module to University Details module
 public protocol UniversityListRouterDelegate: AnyObject {
-    func navigateToDetails(univeristy : UniversityListEntity?)
+    func navigateToDetails(university : UniversityListEntity?, refreshDelegate : DetailsModuleDelegate?)
 }
 
+// Configurator class for University List module setup
 final public class UniversityListConfigurator {
     
     // MARK: Configuration
+    
+    // Function to configure and return the view controller for University List module
     public class func viewController(routerDelegate : UniversityListRouterDelegate?) -> UniversityListViewController {
         let view = UniversityListViewController(nibName: "UniversityListViewController", bundle: .module)
         let loader = UniversityListingLoader()
@@ -38,18 +45,20 @@ final public class UniversityListConfigurator {
 }
 
 // MARK: - Protocols
-// Controller --> Presenter
+
+// Protocol for interactions from Presenter to Controller
 protocol UniversityListPresentable: AnyObject {
-    var  universitysItemsCount: Int { get }
+    var universitiesItemsCount: Int { get }
     func getItem(at index: Int) -> UniversityListEntity?
     func navigateToUniversityDetails(with index: Int)
 }
 
+// Protocol for Presenter actions in University List module
 protocol UniversityListPresenterProtocol: UniversityListPresentable {
-    func viewDidLoad()
+    func fetchUniversityData()
 }
 
-// Presenter --> Controller
+// Protocol for interactions from Presenter to Controller
 protocol UniversityListControllerProtocol: AnyObject {
     func reloadCollectionView()
     func presentError(with message: String)
@@ -60,19 +69,19 @@ protocol UniversityListControllerProtocol: AnyObject {
     func updateCollectionPlaceholderLabel(text: String)
 }
 
-// Presenter --> Interactor
+// Protocol for interactions from Presenter to Interactor
 protocol UniversityListPresenterInteractorProtocol: AnyObject {
     func fetchUniversityList()
 }
 
-// Interactor --> Presenter
+// Protocol for interactions from Interactor to Presenter
 protocol UniversityListInteractorOutput: AnyObject {
-    func didFetchUniversitys(_ universities: [UniversityListEntity])
-    func didFailToFetchUniversitys(with error: Error)
+    func didFetchUniversities(_ universities: [UniversityListEntity])
+    func didFailToFetchUniversities(with error: Error)
     func setLoadingIndicatorVisible(_ isVisible: Bool)
 }
 
-// Presenter --> Router
+// Protocol for interactions from Presenter to Router
 protocol UniversityListRouterProtocol: AnyObject {
-    func navigateToUniversityDetails(for university: UniversityListEntity?)
+    func navigateToUniversityDetails(for university: UniversityListEntity? , refreshDelegate : DetailsModuleDelegate?)
 }

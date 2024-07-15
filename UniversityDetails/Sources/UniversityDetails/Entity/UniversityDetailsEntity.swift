@@ -14,6 +14,14 @@ final public class UniversityDetailsEntity {
     let country: String
     let webPages: [String]
     
+    /// Initializes a new instance of `UniversityDetailsEntity`.
+    ///
+    /// - Parameters:
+    ///   - name: The name of the university.
+    ///   - stateProvince: The state or province where the university is located.
+    ///   - countryCode: The country code of the university.
+    ///   - country: The country where the university is located.
+    ///   - webPages: Array of web pages associated with the university.
     public init(name: String, stateProvince: String, countryCode: String, country: String, webPages: [String]) {
         self.name = name
         self.stateProvince = stateProvince

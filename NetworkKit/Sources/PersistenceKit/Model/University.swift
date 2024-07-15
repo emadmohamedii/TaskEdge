@@ -26,9 +26,9 @@ public class University: Object {
         self.domains.append(objectsIn: response.domains ?? [])
         self.webPages.append(objectsIn: response.webPages ?? [])
     }
-    
+
     func toResponse() -> UniversityResponse {
-        return UniversityResponse(
+        UniversityResponse(
             alphaTwoCode: self.alphaTwoCode,
             country: self.country, domains: Array(self.domains), name: self.name,
             stateProvince: self.stateProvince,

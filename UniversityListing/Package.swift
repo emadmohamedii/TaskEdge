@@ -14,7 +14,9 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../NetworkKit"),
-        .package(path: "../UIComponents")
+        .package(path: "../UIComponents"),
+        .package(path: "../Common")
+
     ],
     targets: [
         .target(
@@ -22,7 +24,8 @@ let package = Package(
             dependencies: [
                 .product(name: "NetworkKit", package: "NetworkKit"),
                 .product(name: "PersistenceKit", package: "NetworkKit"),
-                .product(name: "UIComponents", package: "UIComponents")
+                .product(name: "UIComponents", package: "UIComponents"),
+                .product(name: "Common", package: "Common")
             ]),
     ]
 )
